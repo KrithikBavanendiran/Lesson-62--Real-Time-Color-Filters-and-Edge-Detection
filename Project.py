@@ -14,6 +14,13 @@ def apply_filter(image_path, filter_type):
     elif filter_type == 'blue_tint':
         filtered_image[:, :, 1] = 0
         filtered_image[:, :, 2] = 0
+    elif filter_type == 'yellow_tint':
+        filtered_image[:, :, 0] = 0
+        filtered_image[:, :, 2] = filtered_image[:, :, 2]
+    elif filter_type == 'pink_tint':
+        filtered_image[:, :, 0] = filtered_image[:, :, 0] // 2
+        filtered_image[:, :, 1] = 0
+        filtered_image[:, :, 2] = filtered_image[:, :, 2]
     elif filter_type == 'sobel':
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         sobelx = cv2.Sobel(gray_image, cv2.CV_64F, 1, 0, ksize=3)
@@ -29,7 +36,11 @@ def apply_filter(image_path, filter_type):
         laplacian = cv2.Laplacian(gray_image, cv2.CV_64F)
         laplacian = cv2.convertScaleAbs(laplacian)
         filtered_image = cv2.cvtColor(laplacian, cv2.COLOR_GRAY2BGR)
-    
+    elif filter_type == 'guassian_blur':
+        filtered_image = cv2.GaussianBlur(image, (15, 15), 0)
+    elif filter_type == 'median_blur':
+        filtered_image = cv2.medianBlur(image, 15)
+
     return filtered_image
 
 image_path = 'example.jpg' 
@@ -44,9 +55,13 @@ else:
     print("r - Red Tint")
     print("g - Green Tint") 
     print("b - Blue Tint")
+    print("y - Yellow Tint")
+    print("p - Pink Tint")
     print("s - Sobel Edge Detection")
     print("c - Canny Edge Detection")
     print("l - Laplacian Edge Detection")
+    print("f - Guassian Blur")
+    print("m - Median Blur")
     print("q - Quit")
 
     while True:
@@ -62,15 +77,23 @@ else:
             filter_type = 'green_tint'
         elif key == ord('b'):
             filter_type = 'blue_tint'
+        elif key == ord('y'):
+            filter_type = 'yellow_tint'
+        elif key == ord('p'):
+            filter_type = 'pink_tint'
         elif key == ord('s'):
             filter_type = 'sobel'
         elif key == ord('c'):
             filter_type = 'canny'
         elif key == ord('l'):
             filter_type = 'laplacian'
+        elif key == ord('f'):
+            filter_type = 'guassian_blur'
+        elif key == ord('m'):
+            filter_type = 'median_blur'
         elif key == ord('q'):
             break
         else:
-            print("Invalid key! Please use 'r', 'g', 'b', 's', 'c', 'l', or 'q'.")
+            print("Invalid key! Please use 'r', 'g', 'b', 's', 'c', 'l', 'y', 'p', 'f', 'm', or 'q'.")
     
 cv2.destroyAllWindows()
